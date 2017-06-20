@@ -1,0 +1,25 @@
+{
+    "name" : "sasezaki/sorrydankogai",
+    "description" : "Angry Regex Detector",
+    "license" : "BSD-3-Clause",
+    "keywords": ["extension", "regex"],
+    "require": {
+        "docopt/docopt": "^1.0",
+        "zendframework/zend-console": "^2.6",
+        "hoa/regex": "1.17.01.13"
+    },
+    "require-dev": {
+        "ext-phar": "*",
+        "phpunit/phpunit": "^5.6.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "SorryDankogai\\": "src/SorryDankogai"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SorryDankogai\\": "tests/SorryDankogaiTest"
+        }
+    }
+}

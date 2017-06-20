@@ -1,0 +1,61 @@
+#!/usr/bin/env php
+<?php
+use Zend\Console\ {
+    ColorInterface as Color, Prompt\Confirm
+};
+
+try {
+
+    $doc = <<<DOC
+Sorry! Dan Kogai! - Angry Regex Detector
+========================================
+
+Usage:
+  sorry-dankogai.phar analyze <filename>
+  sorry-dankogai.phar (-h | --help)
+  sorry-dankogai.phar --version
+
+Options:
+  -h --help     Show this screen.
+  --version     Show version.
+
+DOC;
+
+    require_once __DIR__ . '/../vendor/autoload.php';
+
+    $console = \Zend\Console\Console::getInstance();
+    // colorize
+    $doc = str_replace('Angry Regex Detector', $console->colorize('Angry Regex Detector', Color::RED), $doc);
+    $doc = str_replace('========================================', $console->colorize('========================================', Color::YELLOW), $doc);
+    //$doc = str_replace(['Usage:', 'Options:'], [$console->colorize('Usage:', Color::YELLOW), $console->colorize('Options:', Color::YELLOW)], $doc);
+
+    $docopt = Docopt::handle($doc, ['version'=>'SorryDankogai 0.0.1']);
+
+    if ($docopt->args['analyze']) {
+        $filename = $docopt->args['<filename>'];
+
+        $grammar  = new Hoa\File\Read('hoa://Library/Regex/Grammar.pp');
+        $compiler = Hoa\Compiler\Llk\Llk::load($grammar);
+        $visitor = new \SorryDankogai\Analyzer($compiler);
+        /** @var \SplStack $results */
+        $results = $visitor->analyze(\ast\parse_file($filename, 40), $filename);
+        if ($results->count() > 0) {
+            /** @var \ast\Node $node */
+            foreach ($results as $node) {
+                echo 'Angry!', $filename, ':', $node->lineno, '';
+                /** @var Node $args */
+                $args = $node->children['args'];
+                $parameters = $args->children;
+                echo "\t", $parameters[0];
+                echo PHP_EOL;
+            }
+        } else {
+            // echo '';
+        }
+        exit(0);
+    }
+} catch (\Exception $e) {
+    echo 'An Error has occured. ' , get_class($e), PHP_EOL;
+    echo $e->getMessage() , PHP_EOL;
+    exit(1);
+}
