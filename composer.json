@@ -4,7 +4,7 @@
     "license" : "BSD-3-Clause",
     "keywords": ["extension", "regex"],
     "require": {
-        "docopt/docopt": "^1.0",
+        "sasezaki/docopt": "dev-sasezaki/help_decorate",
         "zendframework/zend-console": "^2.6",
         "hoa/regex": "1.17.01.13"
     },

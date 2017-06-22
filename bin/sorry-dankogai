@@ -23,13 +23,17 @@ DOC;
 
     require_once __DIR__ . '/../vendor/autoload.php';
 
-    $console = \Zend\Console\Console::getInstance();
-    // colorize
-    $doc = str_replace('Angry Regex Detector', $console->colorize('Angry Regex Detector', Color::RED), $doc);
-    $doc = str_replace('========================================', $console->colorize('========================================', Color::YELLOW), $doc);
-    //$doc = str_replace(['Usage:', 'Options:'], [$console->colorize('Usage:', Color::YELLOW), $console->colorize('Options:', Color::YELLOW)], $doc);
+    $docopt = (new Docopt\Handler(['version'=>'SorryDankogai 0.0.1']))
+        ->withHelpDecorator(function ($doc) {
+            $console = \Zend\Console\Console::getInstance();
+            // colorize
+            $doc = str_replace('Angry Regex Detector', $console->colorize('Angry Regex Detector', Color::RED), $doc);
+            $doc = str_replace('========================================', $console->colorize('========================================', Color::YELLOW), $doc);
+            $doc = str_replace(['Usage:', 'Options:'], [$console->colorize('Usage:', Color::YELLOW), $console->colorize('Options:', Color::YELLOW)], $doc);
 
-    $docopt = Docopt::handle($doc, ['version'=>'SorryDankogai 0.0.1']);
+            return $doc;
+        })
+        ->handle($doc);
 
     if ($docopt->args['analyze']) {
         $filename = $docopt->args['<filename>'];
